@@ -6,7 +6,6 @@
 <body>
     <script src="./react.js"></script>
 
-
     <div id="root"></div>
 
 
@@ -16,8 +15,22 @@
             return React.createElement("h1",null,"Hello World!");
         }
 
-        const helloWorld = React.createElement(hello,null,null);
-        ReactDOM.render(helloWorld, document.getElementById('root'));
+        const helloW1 = React.createElement(hello,null,null);
+
+        const helloW2 = React.createElement(hello,null,null);
+
+        const regualarDiv = React.createElement('div', null, 'I am just a person saying hello in a div');
+
+        const parent = React.createElement('div',null,
+            helloW1,
+            helloW2,
+            regualarDiv,
+            'Just a regular div'
+        )
+
+        // const helloWorld = React.createElement(hello,null,null);
+
+        ReactDOM.render(parent, document.getElementById('root'));
 
 
     </script>

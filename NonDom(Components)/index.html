@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Build Your Own React</title>
+</head>
+<body>
+    <script src="./react.js"></script>
+
+
+    <div id="root"></div>
+
+
+    <script>
+
+        const hello = function () {
+            return React.createElement("h1",null,"Hello World!");
+        }
+
+
+        const helloWorld = React.createElement(hello,null,null);
+
+        ReactDOM.render(helloWorld, document.getElementById('root'));
+
+
+    </script>
+</body>
+</html>
