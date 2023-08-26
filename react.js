@@ -32,9 +32,15 @@
 
 (() => {
 
+    let rootDOMElement,rootReactElement;
+
+    const REACT_CLASS = "REACT_CLASS";
+    const classMap = {};
+    let classCounter  = 0;
+
     function anElement(el,props,children) {
         if(isClass(el)) {
-            return handleClass(el,props);
+            return handleClass(el,props,children);
         }
         else if(isStateLessComponent(el)) {
             return el(props);
@@ -43,9 +49,16 @@
         }
     }
 
-    function handleClass(clazz,props) {
-        const component = new clazz(props);
-        return component.render();
+    function handleClass(clazz,props, children) {
+        classCounter++;
+        if(classMap[classCounter]) {
+            return classMap[classCounter];
+        }
+        const reactElement = new clazz(props);
+        reactElement.type = REACT_CLASS;
+        reactElement.children = children;
+        classMap[classCounter] = reactElement;
+        return reactElement;
     }
 
     function handleHtmlElement(el, props, children){
@@ -61,7 +74,11 @@
     }
 
     function appendChild(el, child) {
-        if(typeof(child) === 'object') {
+        if(child.type === REACT_CLASS) {
+            console.log(child)
+            appendChild(el,child.render());
+        }
+        else if(typeof(child) === 'object') {
             el.appendChild(child);
         }
         else{
@@ -76,6 +93,14 @@
                 propVal
             )
         } else {
+            if(propName === 'className') {
+                propName = 'class';
+            }
+            if(propName === 'style') {
+                propVal = _.reduce(propVal, (acc,value,key) => {
+                    return acc.concat(`${key} : ${value};`)
+                },'');
+            }
             el.setAttribute(propName,propVal)
         }
     }
@@ -104,6 +129,20 @@
         constructor(props) {
             this.props = props; 
         }
+
+        setState(state) {
+            this.state = Object.assign({}, this.state, state);
+            reRender();
+        }
+    }
+
+    function reRender() {
+        //Clear the DOM
+        while(rootDOMElement.hasChildNodes()) {
+            rootDOMElement.removeChild(rootDOMElement.lastChild);
+        }
+        classCounter = 1;
+        ReactDOM.render(rootReactElement, rootDOMElement);
     }
 
     window.React = {
@@ -113,7 +152,9 @@
 
     window.ReactDOM = {
         render: (el, domEL) => {
-            domEL.appendChild(el);
+            rootDOMElement = domEL;
+            rootReactElement = el;
+            rootDOMElement.appendChild(el.render());
         }
     };
 
