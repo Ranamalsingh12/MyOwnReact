@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Build Your Own React</title>
+</head>
+<body>
+    <script src="./react.js"></script>
+
+    <div id="root"></div>
+
+    <script src = "https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+    <script>
+
+        // const Hello = ({name}) => {
+        //     return React.createElement('div',null, `Hello ${name}`);
+        // }
+
+        class Counter extends React.Component{
+
+            constructor(props) {
+                super(props);
+                this.state = {value: 0};
+            }
+
+            onPlusClick() {
+                this.setState({value : this.state.value + 1});
+            }
+
+
+            onMinusClick() {
+                this.setState({value : this.state.value - 1});
+            }
+
+            render() {
+                return React.createElement('div', null , 
+                    React.createElement('h1', null, 'This is state in React'),
+                    React.createElement('div', null, `${this.state.value}`),
+                    React.createElement('button', {onClick : this.onPlusClick.bind(this)}, '+'),
+                    React.createElement('button', {onClick : this.onMinusClick.bind(this)}, '-'),
+                );
+            }
+        }
+
+
+
+
+        const myBtn = React.createElement(Counter,null,null);
+
+        ReactDOM.render(myBtn, document.getElementById('root'));
+
+
+    </script>
+</body>
+</html>
